@@ -131,7 +131,7 @@ function importFromJsonFile(event) {
       saveQuotes();
       populateCategories();
       filterQuotes();
-      alert("Quotes imported successfully!");
+      alert("Quotes synced with server!");
     } catch {
       alert("Invalid JSON file.");
     }
