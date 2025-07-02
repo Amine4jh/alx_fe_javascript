@@ -204,6 +204,62 @@ function init() {
   loadLastViewedQuote();
   createAddQuoteForm();
   createExportImportButtons();
+  simulateServerFetchAndSync();
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+const SYNC_INTERVAL_MS = 30000;
+
+function simulateServerFetchAndSync() {
+  fetch(SERVER_URL)
+    .then((response) => response.json())
+    .then((serverData) => {
+      const serverQuotes = serverData.slice(0, 5).map((post) => ({
+        text: post.title,
+        category: "Server",
+      }));
+
+      let localChanged = false;
+
+      serverQuotes.forEach((serverQuote) => {
+        const localQuote = quotes.find((q) => q.text === serverQuote.text);
+        if (!localQuote) {
+          quotes.push(serverQuote);
+          localChanged = true;
+        } else {
+          // Conflict: same quote text but different category
+          if (localQuote.category !== serverQuote.category) {
+            // Conflict Resolution Strategy: Server Wins
+            localQuote.category = serverQuote.category;
+            localChanged = true;
+            // Optionally: show manual conflict dialog
+            showConflictResolutionDialog(localQuote, serverQuote);
+          }
+        }
+      });
+
+      if (localChanged) {
+        saveQuotes();
+        populateCategories();
+        filterQuotes();
+        showNotification();
+      }
+    })
+    .catch((err) => {
+      console.error("Server sync failed:", err);
+    });
+}
+
+// Periodic sync
+setInterval(simulateServerFetchAndSync, SYNC_INTERVAL_MS);
+
+function showNotification() {
+  const box = document.getElementById("syncNotification");
+  box.style.display = "block";
+}
+
+function dismissNotification() {
+  document.getElementById("syncNotification").style.display = "none";
+}
