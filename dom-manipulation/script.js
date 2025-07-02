@@ -16,9 +16,18 @@ function loadQuotes() {
     }
   } else {
     quotes = [
-      { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
-      { text: "Life is what happens when you're busy making other plans.", category: "Life" },
-      { text: "In the middle of difficulty lies opportunity.", category: "Inspiration" },
+      {
+        text: "The only limit to our realization of tomorrow is our doubts of today.",
+        category: "Motivation",
+      },
+      {
+        text: "Life is what happens when you're busy making other plans.",
+        category: "Life",
+      },
+      {
+        text: "In the middle of difficulty lies opportunity.",
+        category: "Inspiration",
+      },
     ];
     saveQuotes();
   }
@@ -31,19 +40,17 @@ function saveQuotes() {
 
 // Populate dropdown with unique categories
 function populateCategories() {
-  const categories = [...new Set(quotes.map(q => q.category))];
+  const categories = [...new Set(quotes.map((q) => q.category))];
 
   // Clear existing except "All"
   categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
 
-  categories.forEach(category => {
+  categories.forEach((category) => {
     const option = document.createElement("option");
     option.value = category;
     option.textContent = category;
     categoryFilter.appendChild(option);
-  }
-
-  );
+  });
 
   // Restore last selected filter
   const savedFilter = localStorage.getItem(LAST_FILTER_KEY);
@@ -55,25 +62,25 @@ function populateCategories() {
 
 // Filter quotes by selected category
 function filterQuotes() {
-    const selected = categoryFilter.value;
-    localStorage.setItem(LAST_FILTER_KEY, selected);
-  
-    const filtered = selected === "all"
+  const selectedCategory = categoryFilter.value;
+  localStorage.setItem(LAST_FILTER_KEY, selectedCategory);
+
+  const filtered =
+    selectedCategory === "all"
       ? quotes
-      : quotes.filter(q => q.category === selected);
-  
-    if (filtered.length === 0) {
-      quoteDisplay.textContent = "No quotes available in this category.";
-      return;
-    }
-  
-    // Show 1 random quote from filtered list
-    const randomIndex = Math.floor(Math.random() * filtered.length);
-    const quote = filtered[randomIndex];
-    quoteDisplay.textContent = `"${quote.text}" (${quote.category})`;
-  
-    // Save last viewed quote in sessionStorage
-    sessionStorage.setItem("lastViewedQuote", quote.text);
+      : quotes.filter((q) => q.category === selectedCategory);
+
+  if (filtered.length === 0) {
+    quoteDisplay.textContent = "No quotes available in this category.";
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * filtered.length);
+  const quote = filtered[randomIndex];
+  quoteDisplay.textContent = `"${quote.text}" (${quote.category})`;
+
+  // Save last viewed quote
+  sessionStorage.setItem("lastViewedQuote", quote.text);
 }
 
 // Display filtered quotes
@@ -85,7 +92,7 @@ function displayQuotes(quoteList) {
     return;
   }
 
-  quoteList.forEach(q => {
+  quoteList.forEach((q) => {
     const p = document.createElement("p");
     p.textContent = `"${q.text}" (${q.category})`;
     filteredQuotesDisplay.appendChild(p);
@@ -187,7 +194,7 @@ function init() {
   function loadLastViewedQuote() {
     const lastQuote = sessionStorage.getItem("lastViewedQuote");
     if (lastQuote) {
-        quoteDisplay.textContent = `"${lastQuote}"`;
+      quoteDisplay.textContent = `"${lastQuote}"`;
     }
   }
 
