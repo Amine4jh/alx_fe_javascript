@@ -55,14 +55,25 @@ function populateCategories() {
 
 // Filter quotes by selected category
 function filterQuotes() {
-  const selected = categoryFilter.value;
-  localStorage.setItem(LAST_FILTER_KEY, selected);
-
-  const filtered = selected === "all"
-    ? quotes
-    : quotes.filter(q => q.category === selected);
-
-  displayQuotes(filtered);
+    const selected = categoryFilter.value;
+    localStorage.setItem(LAST_FILTER_KEY, selected);
+  
+    const filtered = selected === "all"
+      ? quotes
+      : quotes.filter(q => q.category === selected);
+  
+    if (filtered.length === 0) {
+      quoteDisplay.textContent = "No quotes available in this category.";
+      return;
+    }
+  
+    // Show 1 random quote from filtered list
+    const randomIndex = Math.floor(Math.random() * filtered.length);
+    const quote = filtered[randomIndex];
+    quoteDisplay.textContent = `"${quote.text}" (${quote.category})`;
+  
+    // Save last viewed quote in sessionStorage
+    sessionStorage.setItem("lastViewedQuote", quote.text);
 }
 
 // Display filtered quotes
@@ -173,9 +184,17 @@ function createExportImportButtons() {
 
 // Initialize app
 function init() {
+  function loadLastViewedQuote() {
+    const lastQuote = sessionStorage.getItem("lastViewedQuote");
+    if (lastQuote) {
+        quoteDisplay.textContent = `"${lastQuote}"`;
+    }
+  }
+
   loadQuotes();
   populateCategories();
   filterQuotes(); // Also restores previous filter
+  loadLastViewedQuote();
   createAddQuoteForm();
   createExportImportButtons();
 }
