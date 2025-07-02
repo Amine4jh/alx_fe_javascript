@@ -96,12 +96,29 @@ function addQuote() {
   const category = document.getElementById("newQuoteCategory").value.trim();
   if (!text || !category) return alert("Both quote and category are required.");
 
-  quotes.push({ text, category });
+  const newQuote = { text, category };
+  quotes.push(newQuote);
   saveQuotes();
   populateCategories();
   filterQuotes();
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
+
+  // ✅ POST to mock server
+  fetch(SERVER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newQuote),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Posted to server:", data);
+    })
+    .catch((err) => {
+      console.error("Server POST error:", err);
+    });
 }
 
 // ---------- Import / Export ----------
