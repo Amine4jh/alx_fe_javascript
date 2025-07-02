@@ -204,7 +204,7 @@ function init() {
   loadLastViewedQuote();
   createAddQuoteForm();
   createExportImportButtons();
-  simulateServerFetchAndSync();
+  fetchQuotesFromServer();
 }
 
 document.addEventListener("DOMContentLoaded", init);
@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", init);
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
 const SYNC_INTERVAL_MS = 30000;
 
-function simulateServerFetchAndSync() {
+function fetchQuotesFromServer() {
   fetch(SERVER_URL)
     .then((response) => response.json())
     .then((serverData) => {
@@ -253,7 +253,7 @@ function simulateServerFetchAndSync() {
 }
 
 // Periodic sync
-setInterval(simulateServerFetchAndSync, SYNC_INTERVAL_MS);
+setInterval(fetchQuotesFromServer, SYNC_INTERVAL_MS);
 
 function showNotification() {
   const box = document.getElementById("syncNotification");
