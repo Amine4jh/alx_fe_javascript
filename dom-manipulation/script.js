@@ -41,7 +41,7 @@ function saveQuotes() {
   localStorage.setItem(QUOTES_KEY, JSON.stringify(quotes));
 }
 
-function loadQuotes() {
+function syncQuotes() {
   const data = localStorage.getItem(QUOTES_KEY);
   quotes = data ? JSON.parse(data) : [];
 
@@ -193,7 +193,7 @@ function dismissNotification() {
 
 // ---------- Initialization ----------
 function init() {
-  loadQuotes();
+  syncQuotes();
   populateCategories();
   filterQuotes();
   showRandomQuote();
