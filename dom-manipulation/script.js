@@ -135,7 +135,7 @@ function exportQuotes() {
 }
 
 // ---------- Server Sync ----------
-async function syncWithServer() {
+async function fetchQuotesFromServer() {
   try {
     const res = await fetch(SERVER_URL);
     const posts = await res.json();
@@ -180,8 +180,8 @@ function init() {
   populateCategories();
   filterQuotes();
   showRandomQuote();
-  syncWithServer();
-  setInterval(syncWithServer, SYNC_INTERVAL);
+  fetchQuotesFromServer();
+  setInterval(fetchQuotesFromServer, SYNC_INTERVAL);
 }
 
 document.addEventListener("DOMContentLoaded", init);
